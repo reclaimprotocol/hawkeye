@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reclaim Interceptor
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-08
+// @version      2025-07-11
 // @description  Intercepts requests and response
 // @author       Abdul Rashid Reshamwala
 // @match        *://*/*
