@@ -102,15 +102,13 @@
           responseBody = "[Response body already consumed]";
         } else {
           // Try to parse based on content type using the provided response directly
-          if (contentType.includes("application/json")) {
+          if (contentType.includes("text/") || contentType.includes("application/json")) {
             try {
-              responseBody = await response.json();
-            } catch (jsonError) {
-              // If JSON parsing fails, the body is consumed, we can't read it again
-              responseBody = "[Invalid JSON format]";
+              responseBody = await response.text();
+            } catch (textError) {
+              // If response body parsing fails, the body is consumed, we can't read it again
+              responseBody = "[Invalid response format]";
             }
-          } else if (contentType.includes("text/")) {
-            responseBody = await response.text();
           } else {
             // For binary data, get as text but mark it as binary
             const text = await response.text();
