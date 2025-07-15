@@ -105,8 +105,8 @@
           if (contentType.includes("text/") || contentType.includes("application/json")) {
             try {
               responseBody = await response.text();
-            } catch (jsonError) {
-              // If JSON parsing fails, the body is consumed, we can't read it again
+            } catch (textError) {
+              // If response body parsing fails, the body is consumed, we can't read it again
               responseBody = "[Invalid response format]";
             }
           } else {
