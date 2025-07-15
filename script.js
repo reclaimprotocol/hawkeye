@@ -104,10 +104,10 @@
           // Try to parse based on content type using the provided response directly
           if (contentType.includes("text/") || contentType.includes("application/json")) {
             try {
-              responseBody = await response.json();
+              responseBody = await response.text();
             } catch (jsonError) {
               // If JSON parsing fails, the body is consumed, we can't read it again
-              responseBody = "[Invalid JSON format]";
+              responseBody = "[Invalid response format]";
             }
           } else {
             // For binary data, get as text but mark it as binary
