@@ -199,8 +199,8 @@
               // Resolve potentially relative request URL (similar to MSW)
               const resolvedInput =
                 typeof input === "string" &&
-                typeof location !== "undefined" &&
-                !self.canParseUrl(input)
+                  typeof location !== "undefined" &&
+                  !self.canParseUrl(input)
                   ? new URL(input, location.href)
                   : input;
 
@@ -388,11 +388,37 @@
                 },
               };
 
+              let sourceBody = requestData.options.body;
+              const sourceHeaders = {
+                ...options.headers,
+              };
+
+              switch (requestData.options.method.toUpperCase()) {
+                case "POST":
+                  if (sourceBody instanceof FormData) {
+                    sourceBody = await (new Response(sourceBody)).text();
+                    if (typeof sourceBody === "string") {
+                      const boundary = sourceBody.substring(0, sourceBody.indexOf('\n') - 1);
+                      sourceHeaders["content-type"] = `multipart/form-data; boundary=${boundary}`;
+                    }
+                  }
+                  break;
+              }
+
+              const middlewareRequestData = {
+                ...requestData,
+                options: {
+                    ...requestData.options,
+                    headers: sourceHeaders,
+                    body: sourceBody || requestData.options.body,
+                }
+              };
+
               try {
                 // Process request middlewares
                 await Promise.all(
                   Array.from(self.requestMiddlewares.values()).map(
-                    (middleware) => middleware(requestData)
+                    (middleware) => middleware(middlewareRequestData)
                   )
                 );
               } catch (error) {
@@ -407,7 +433,7 @@
 
               // Process response middlewares without blocking
               self
-                .processResponseMiddlewares(response.clone(), requestData)
+                .processResponseMiddlewares(response.clone(), middlewareRequestData)
                 .catch((error) => {
                   debug.error("Error in response middleware:", error);
                 });
@@ -425,8 +451,8 @@
 
             const resolvedInput =
               typeof input === "string" &&
-              typeof location !== "undefined" &&
-              !self.canParseUrl(input)
+                typeof location !== "undefined" &&
+                !self.canParseUrl(input)
                 ? new URL(input, location.href)
                 : input;
 
