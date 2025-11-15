@@ -954,8 +954,8 @@
     disableXHR: false, // Set to true to disable XHR interception
     disableFormIntercept: false, // Set to true to disable form submission interception
     delayFormSubmitForFetch: true, // Set to true to wait for fetch before form navigation
-    useProxyForFetch: \(useProxyForFetch), // Set to false to use direct replacement instead of Proxy (default: true)
-    useGetterForFetch: \(useGetterForFetch), // Set to true to use getter/setter approach (most robust)
+    useProxyForFetch: false, // Set to false to use direct replacement instead of Proxy (default: true)
+    useGetterForFetch: true, // Set to true to use getter/setter approach (most robust)
   });
 
   // Example middleware for logging requests with ID
