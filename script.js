@@ -398,7 +398,7 @@
                   if (sourceBody instanceof FormData) {
                     sourceBody = await (new Response(sourceBody)).text();
                     if (typeof sourceBody === "string") {
-                      const boundary = sourceBody.substring(1, sourceBody.search(/\r\n|\n/));
+                      const boundary = sourceBody.substring(2, sourceBody.search(/\r\n|\n/));
                       sourceHeaders["content-type"] = `multipart/form-data; boundary=${boundary}`;
                     }
                   }
